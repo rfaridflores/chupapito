@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.7.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.farid.ws.soap</groupId>
+	<artifactId>javasoapclient</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>javasoapclient</name>
+	<description>Java Soap Client</description>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<!-- Esta es la dependecia de JAXWS necesaria para tener un servidor y 
+			utilizar los estandares de Jaxws abajo esta la necesaria para generar clases 
+			en base al WSDL -->
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+			<version>3.3.6</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+	</dependencies>
+
+	<build>
+
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- plugin necesario para generar las clases en base al WSDL Parametros 
+				necesarios para utilizar el plugin: sourceRoot y wsdl las clases generadas 
+				por este plugin son marcadas con las API annotation JAXB & JAX-WS -crear 
+				el wsdl -generar la s clases -configurar application.properties -crear CustomerOrderWsImpl 
+				-creare WebServiceConfig , endpoint -->
+
+			<plugin>
+				<groupId>org.apache.cxf</groupId>
+				<artifactId>cxf-codegen-plugin</artifactId> <!--artifactId es el nombre del plugin que controla al wsdl2java que es .exe -->
+				<version>3.2.1</version>
+				<executions>
+					<execution>
+					<id>generate-sources</id>
+						<phase>generate-sources</phase>
+						<configuration>
+							<!--este parametro project.build.directory apunta a target, ahi creara 
+								la carpeta /generated/cxf y las clases que se generen con el plugin seran 
+								puestas ahi -->
+							<sourceRoot>${project.build.directory}/generated/cxf</sourceRoot>
+							<wsdlOptions>
+								<wsdlOption>
+									<!--${basedir} point to main proyect directory: wsdlfirstws -->
+									<wsdl>${basedir}/src/main/resources/wsdl/CustomerOrders.wsdl</wsdl>
+
+									<!--si utilizamos classpath el plugin buscara el wsdl, bajo la carpetawsdl -->
+									<wsdlLocation>classpath:CustomerOrders.wsdl</wsdlLocation>
+
+								</wsdlOption>
+							</wsdlOptions>
+						</configuration>
+						<goals>
+						<goal>wsdl2java</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

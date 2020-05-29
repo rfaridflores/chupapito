@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- name space -->
+<!--  schema is the root element of a schema which is unique for xml -->
+
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.farid.org/Patient"
+ xmlns:tns="http://www.farid.org/Patient"
+ elementFormDefault="qualified">
+ <!-- elementFormDefault if ="qualified" significa que en el xml los elements deben de ser referenciados por el nameSpace prefix 'tns'
+ sino nos data un error. e.g tns:name  , elementFormDefault if ="unqualified"nameSpace prefix no sera obligatorio-->
+   
+  <!-- element  -->
+ <element name="patient" type="tns:Patient"></element>
+  
+  <!--completx type, define all element required e.g. name, age, dob, email, gender, phone -->
+  <complexType name="Patient">
+  
+  <!--sequence nos dice que los elementos dentro de complexType deben de estar en el exacto orden que se definen -->
+  	<sequence>
+  		<element name="name" type ="tns:String15Chars"></element>
+  		<element name="age" type ="int"></element>
+  		<element name="dob" type="date"></element>
+  		<element name="email" type ="string"></element>
+  		<element name="gender" type ="tns:Gender"></element>
+  		<element name="phone" type ="string"></element>
+  		 <element name="payment" type ="tns:PaymentType"></element>
+  	</sequence>
+  	<attribute name="id" type="tns:ID"> </attribute>
+  </complexType>
+  
+  <complexType name="PaymentType">
+  	<choice>
+  		<element name="cash" type="int"></element>
+  		<element name="insurance" type="tns:Insurance"></element>
+  	</choice>
+  </complexType>
+  
+  <complexType name="Insurance">
+  	<all>
+  		<element name="provider" type="string"></element>
+  		<element name="limit" type="int"></element>
+  	</all>
+  </complexType>
+  
+    <!--simpleType es usado para poner restricciones a los field definidos arriba -->
+  <simpleType name="ID">
+ 	 <restriction base="int">
+  		<pattern value="[0-9]*"></pattern>
+ 	 </restriction>
+  </simpleType>
+  
+  <simpleType name="String15Chars">
+ 	 <restriction base="string">
+		<maxLength value="15"></maxLength> 	
+ 	</restriction>
+  </simpleType>
+  
+  <simpleType name="Gender">
+ 	 <restriction base="string">
+		<enumeration value="M"></enumeration>
+		<enumeration value="F"></enumeration>
+ 	</restriction>
+  </simpleType>
+  
+</schema>
